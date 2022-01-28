@@ -71,8 +71,9 @@ class Tetris:
         """
         for y in range(block.height):
             for x in range(block.width):
-                if block.shape[y][x] and self.grid[block.y+y][block.x+x] == block:
-                    self.grid[block.y+y][block.x+x] = None
+                if 0 <= block.y+y < self.height and 0 <= block.x+x < self.width:
+                    if block.shape[y][x] and self.grid[block.y+y][block.x+x] == block:
+                        self.grid[block.y+y][block.x+x] = None
 
     def _moveX(self, block, direction):
         """
@@ -207,6 +208,26 @@ class Tetris:
             for x in range(self.width):
                 if self.grid[y][x] is not None and self._canFall(self.grid[y][x]):
                     self._moveY(self.grid[y][x], self.height)
+
+    def rotate(self, clockwise):
+        """
+            Rotates the current block.
+
+            Parameters
+            ----------
+            clockwise : bool
+                If True, performs a clockwise rotation, couterclockwise otherwise
+        """
+        if self._current_block is not None:
+            self._removeBlock(self._current_block)
+            self._current_block.rotate(clockwise)
+            try:
+                self._insertBlock(self._current_block)
+            except (OverlapError, IndexError):
+                # Revert the rotation
+                self._removeBlock(self._current_block)
+                self._current_block.rotate(not clockwise)
+                self._insertBlock(self._current_block)
 
 
     def nextStep(self):

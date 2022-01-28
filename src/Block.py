@@ -16,6 +16,10 @@ BLOCKS = [
     [
         [True, True, True, True], 
     ],
+    [
+        [True, True, True],
+        [None, True, None],
+    ],
 ]
 
 COLORS = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
@@ -88,3 +92,21 @@ class Block:
                 self.width = len(self.shape[0])
             else:
                 self.width = 0
+
+    def rotate(self, clockwise=True):
+        """
+            Rotates the shape of the block.
+
+            Parameters
+            ----------
+            clockwise : bool, optional
+                If True, it performs a 90° rotation
+                If False, it performs a -90° rotation
+        """
+        if clockwise:
+            self.shape = list(zip(*reversed(self.shape)))  # 90°
+        else:
+            self.shape = list(reversed(list(zip(*self.shape))))  # -90°
+
+        self.width = len(self.shape[0])
+        self.height = len(self.shape)

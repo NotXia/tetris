@@ -26,11 +26,15 @@ while running:
         tetris.moveRight()
     if keys[pygame.K_DOWN] or keys[pygame.K_s]:
         tetris.moveDown()
+    if keys[pygame.K_e]:
+        tetris.rotate(clockwise=True)
+    if keys[pygame.K_q]:
+        tetris.rotate(clockwise=False)
 
     if not tetris.nextStep():
         print("Game over")
         running = False
-        
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
