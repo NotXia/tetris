@@ -32,7 +32,7 @@ class Block:
         """
         self.x, self.y = x, y
         self.color = random.choice(COLORS)
-        self.shape = random.choice(BLOCKS)
+        self.shape = random.choice(BLOCKS).copy()
 
         self.width = len(self.shape[0])
         self.height = len(self.shape)
@@ -69,3 +69,21 @@ class Block:
                 coords.append((self.x + x, self.y + y+1))
 
         return coords
+
+    def deleteShapeRow(self, row):
+        """
+            Deletes a row of the shape and updates the size.
+
+            Parameters
+            ----------
+            row : int
+                The row to delete
+        """
+        if 0 <= row < self.height:
+            del self.shape[row]
+            self.height = len(self.shape)
+
+            if self.height > 0:
+                self.width = len(self.shape[0])
+            else:
+                self.width = 0
