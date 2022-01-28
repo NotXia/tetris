@@ -4,7 +4,6 @@ from Tetris import Tetris
 from ScreenController import ScreenController
 
 pygame.init()
-
 tetris = Tetris(WIDTH, HEIGHT) # Game controller
 screenController = ScreenController(pygame)
 
@@ -32,6 +31,7 @@ while running:
     if keys[pygame.K_DOWN] or keys[pygame.K_s]:
         tetris.moveDown()
 
-    screenController.render(tetris.grid)
+    screenController.renderGrid(tetris.grid)
+    screenController.updateScore(tetris.score)
 
 pygame.quit()

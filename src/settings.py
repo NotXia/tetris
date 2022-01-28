@@ -1,6 +1,6 @@
 # Screen settings
 BACKGROUND_COLOR = (255, 255, 255)
-
+SCORE_COLOR = (255, 50, 50)
 
 # Grid settings
 WIDTH, HEIGHT = 10, 20

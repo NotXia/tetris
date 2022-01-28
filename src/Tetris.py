@@ -8,7 +8,8 @@ class Tetris:
         self.width = width
         self.height = height
         self.grid = [[None for x in range(width)] for y in range(height)]
-        self._current_block = None # Contains the block controlled by the player
+        self._current_block = None  # Contains the block controlled by the player
+        self.score = 0
 
 
     def _canFall(self, block):
@@ -242,6 +243,7 @@ class Tetris:
                     for y in range(self.height - 1, -1, -1):
                         if self._isFullRow(y):
                             self._resetRow(y)
+                            self.score = self.score + 100
                             something_changed = True
 
                     self._handleGravity()
