@@ -36,7 +36,7 @@ class ScreenController:
 
         self.pygame.display.update()
 
-    def update(self, grid):
+    def render(self, grid):
         """
             Renders the board
 

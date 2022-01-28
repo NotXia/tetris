@@ -32,6 +32,6 @@ while running:
     if keys[pygame.K_DOWN] or keys[pygame.K_s]:
         tetris.moveDown()
 
-    screenController.update(tetris.grid)
+    screenController.render(tetris.grid)
 
 pygame.quit()
