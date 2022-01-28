@@ -63,10 +63,11 @@ class Block:
             else:
                 # Searches for the first solid cell
                 y = self.height-2
-                while self.shape[y][x] is None:
+                while y >= 0 and self.shape[y][x] is None:
                     y = y-1
 
-                coords.append((self.x + x, self.y + y+1))
+                if self.shape[y][x] is not None:  # Could be a column without solid block
+                    coords.append((self.x + x, self.y + y + 1))
 
         return coords
 

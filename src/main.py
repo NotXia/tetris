@@ -15,10 +15,6 @@ running = True
 while running:
     clock.tick(FPS)
 
-    if not tetris.nextStep():
-        print("Game over")
-        running = False
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -30,6 +26,14 @@ while running:
         tetris.moveRight()
     if keys[pygame.K_DOWN] or keys[pygame.K_s]:
         tetris.moveDown()
+
+    if not tetris.nextStep():
+        print("Game over")
+        running = False
+        
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
 
     screenController.renderGrid(tetris.grid)
     screenController.updateScore(tetris.score)
