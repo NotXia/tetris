@@ -23,8 +23,14 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.KEYDOWN:
-            pass
+        
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+        tetris.moveLeft()
+    if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+        tetris.moveRight()
+    if keys[pygame.K_DOWN] or keys[pygame.K_s]:
+        tetris.moveDown()
 
     screenController.update(tetris.grid)
 

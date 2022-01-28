@@ -1,5 +1,8 @@
 from Block import Block
 
+class OverlapError(Exception):
+    pass
+
 class Tetris:
     def __init__(self, width, height):
         self.width = width
@@ -52,7 +55,7 @@ class Tetris:
             for x in range(block.width):
                 if block.shape[y][x]:
                     if self.grid[block.y+y][block.x+x] is not None:
-                        raise RuntimeError("Blocks are overlapping")
+                        raise OverlapError("Blocks are overlapping")
                         
                     self.grid[block.y+y][block.x+x] = block
         
@@ -67,7 +70,7 @@ class Tetris:
         """
         for y in range(block.height):
             for x in range(block.width):
-                if block.shape[y][x]:
+                if block.shape[y][x] and self.grid[block.y+y][block.x+x] == block:
                     self.grid[block.y+y][block.x+x] = None
 
     def nextStep(self):
@@ -86,7 +89,7 @@ class Tetris:
             self._current_block = new_block
             try:
                 self._insertBlock(new_block)
-            except RuntimeError: 
+            except OverlapError:
                 return False # Game over
         else:
             if self._canFall(self._current_block):
@@ -97,3 +100,91 @@ class Tetris:
                 self._current_block = None
 
         return True
+
+
+    def _moveX(self, block, direction):
+        """
+            Moves the block to a specified direction along the x-axis (if possible).
+
+            Parameters
+            ----------
+            block : Block
+                The block to move
+            direction : int
+                The direction of the move
+
+            Returns
+            -------
+            bool
+                True  : on success
+                False : otherwise
+
+            Examples
+            --------
+                >>> _moveX(-1) represents a move to left
+                >>> _moveX(1)  represents a move to right
+        """
+        old_position = block.x
+        new_position = block.x + direction
+
+        # Checks if it goes out of bounds
+        if new_position < 0 or (new_position + block.width > self.width):
+            return False
+
+        try:
+            self._removeBlock(block)
+            block.x = new_position
+            self._insertBlock(block)
+            return True
+        except OverlapError:
+            # Revert the move
+            self._removeBlock(block)
+            block.x = old_position
+            self._insertBlock(block)
+            return False
+
+    def _moveY(self, block, direction):
+        """
+            Moves the block a specific number of cells down (if possible).
+
+            Parameters
+            ----------
+            block : Block
+                The block to move
+            direction : int
+                The direction of the move. It must be >= 0
+
+            Returns
+            -------
+            bool
+                True  : on success
+                False : otherwise
+        """
+        self._removeBlock(block)
+
+        while self._canFall(block) and direction > 0:
+            block.y = block.y + 1
+            direction = direction - 1
+
+        self._insertBlock(block)
+    
+    def moveLeft(self):
+        """
+            Moves the current block to left.
+        """
+        if self._current_block is not None:
+            self._moveX(self._current_block, -1)
+
+    def moveRight(self):
+        """
+            Moves the current block to right.
+        """
+        if self._current_block is not None:
+            self._moveX(self._current_block, 1)
+
+    def moveDown(self):
+        """
+            Moves the current block at the bottom.
+        """
+        if self._current_block is not None:
+            self._moveY(self._current_block, self.height)
