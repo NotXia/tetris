@@ -9,16 +9,18 @@ screenController = ScreenController(pygame)
 
 screenController.initUI()
 
+fall_delay = FALL_DELAY_START
+fall_prev_tick = 0
+score_at_last_delay_update = 0
+
 clock = pygame.time.Clock()
 running = True
 
 while running:
     clock.tick(FPS)
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        
+    events = pygame.event.get()
+
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT] or keys[pygame.K_a]:
         tetris.moveLeft()
@@ -26,19 +28,30 @@ while running:
         tetris.moveRight()
     if keys[pygame.K_DOWN] or keys[pygame.K_s]:
         tetris.moveDown()
-    if keys[pygame.K_e]:
-        tetris.rotate(clockwise=True)
-    if keys[pygame.K_q]:
-        tetris.rotate(clockwise=False)
 
-    if not tetris.nextStep():
-        print("Game over")
-        running = False
+    # To prevent uncontrollable rotation
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                tetris.rotate(clockwise=True)
+            if event.key == pygame.K_q:
+                tetris.rotate(clockwise=False)
 
-    for event in pygame.event.get():
+    if pygame.time.get_ticks() - fall_prev_tick >= fall_delay:  # Handles game's speed
+        if not tetris.nextStep():
+            print("Game over")
+            running = False
+        fall_prev_tick = pygame.time.get_ticks()
+
+    for event in events:
         if event.type == pygame.QUIT:
             running = False
 
+    # Increases the speed if the threshold is reached
+    if tetris.score != score_at_last_delay_update and tetris.score % FALL_DELAY_SCORE_THRESHOLD == 0:
+        fall_delay = fall_delay / FALL_DELAY_DECREASE_RATE
+        score_at_last_delay_update = tetris.score
+        
     screenController.renderGrid(tetris.grid)
     screenController.updateScore(tetris.score)
 
