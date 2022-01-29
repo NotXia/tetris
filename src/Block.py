@@ -108,5 +108,8 @@ class Block:
         else:
             self.shape = list(reversed(list(zip(*self.shape))))  # -90°
 
+        # Convert to list
+        self.shape = [list(t) for t in self.shape]
+
         self.width = len(self.shape[0])
         self.height = len(self.shape)
