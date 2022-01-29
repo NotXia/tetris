@@ -20,9 +20,17 @@ BLOCKS = [
         [True, True, True],
         [None, True, None],
     ],
+    [
+        [None, True, True],
+        [True, True, None],
+    ],
+    [
+        [True, True, None],
+        [None, True, True],
+    ],
 ]
 
-COLORS = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
+COLORS = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (0, 255, 255), (255, 0, 255), (192, 192, 192), (128, 128, 128)]
 
 class Block:
     def __init__(self, x, y):
