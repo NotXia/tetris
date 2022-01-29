@@ -70,7 +70,7 @@ class ScreenController:
                 The score to show
         """
         score_container = self.pygame.draw.rect(self._screen, BACKGROUND_COLOR, (WIDTH*(CELL_SIZE-1), 50, 200, 50))
-        score_text = self._font.render(f"{score}", True, SCORE_COLOR)
+        score_text = self._font.render(f"{score*100}", True, SCORE_COLOR)
         score_rect = score_text.get_rect()
         score_rect.center = score_container.center
         self._screen.blit(score_text, score_rect)

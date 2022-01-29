@@ -264,7 +264,7 @@ class Tetris:
                     for y in range(self.height - 1, -1, -1):
                         if self._isFullRow(y):
                             self._resetRow(y)
-                            self.score = self.score + 100
+                            self.score = self.score + 1
                             something_changed = True
 
                     self._handleGravity()
