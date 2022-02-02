@@ -8,7 +8,10 @@ class Tetris:
         self.width = width
         self.height = height
         self.grid = [[None for x in range(width)] for y in range(height)]
+
         self._current_block = None  # Contains the block controlled by the player
+        self.next_block = self._generateBlock()
+
         self.score = 0
 
 
@@ -229,6 +232,16 @@ class Tetris:
                 self._current_block.rotate(not clockwise)
                 self._insertBlock(self._current_block)
 
+    def _generateBlock(self):
+        """
+            Generates a new block placed on the top of the grid
+
+            Returns
+            -------
+            Block
+                The new generated block
+        """
+        return Block(round(self.width / 2) - 2, 0)
 
     def nextStep(self):
         """
@@ -241,11 +254,11 @@ class Tetris:
                 True  : otherwise
         """
         if self._current_block is None:
-            # Generates a new block
-            new_block = Block(round(self.width / 2) - 2, 0)
-            self._current_block = new_block
+            # Sets a new block and generates the next block
+            self._current_block = self.next_block
+            self.next_block = self._generateBlock()            
             try:
-                self._insertBlock(new_block)
+                self._insertBlock(self._current_block)
             except OverlapError:
                 return False  # Game over
         else:
@@ -255,7 +268,7 @@ class Tetris:
                 self._current_block = None
 
                 # Score update
-                # The loop is used to handle a full row that is created after the fall of other blocks
+                # The loop handles a full row that is created after the fall of other blocks
                 something_changed = True
                 while something_changed:
                     something_changed = False

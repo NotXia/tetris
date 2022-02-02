@@ -54,5 +54,6 @@ while running:
         
     screenController.renderGrid(tetris.grid)
     screenController.updateScore(tetris.score)
+    screenController.renderNextBlock(tetris.next_block)
 
 pygame.quit()
