@@ -8,8 +8,6 @@ class ScreenController:
         screen_height = HEIGHT*(CELL_SIZE-1)
         self._screen = pygame.display.set_mode([screen_width, screen_height])
 
-        self._font = pygame.font.Font(pygame.font.get_default_font(), 32)
-
     def _drawCell(self, x, y, color):
         """
             Draws the cell of a specific position. Does not render on screen.
@@ -60,6 +58,34 @@ class ScreenController:
                 
         self.pygame.display.update()
 
+    def _centerText(self, text, font_size, text_color, background_color, position, size):
+        """
+            Renders the text centered in a rectangle container
+
+            Parameters
+            ----------
+                text : String
+                    Text to render
+
+                font_size : int
+                    Font size
+
+                textColor, backgroundColor : (int, int, int)
+                    RGB color for the text and the background
+
+                position : (int, int)
+                    (x, y) coordinates for the top-left corner of the rectangle
+
+                size : (int, int)
+                    (width, height) for the rectangle
+        """
+        font = self.pygame.font.Font(self.pygame.font.get_default_font(), font_size)
+        container = self.pygame.draw.rect(self._screen, background_color, (position[0], position[1], size[0], size[1]))
+        text = font.render(text, True, text_color)
+        rect = text.get_rect()
+        rect.center = container.center
+        self._screen.blit(text, rect)
+
     def updateScore(self, score):
         """
             Updates the score
@@ -69,11 +95,15 @@ class ScreenController:
             score : int
                 The score to show
         """
-        score_container = self.pygame.draw.rect(self._screen, BACKGROUND_COLOR, (WIDTH*(CELL_SIZE-1), 50, 200, 50))
-        score_text = self._font.render(f"{score*100}", True, SCORE_COLOR)
-        score_rect = score_text.get_rect()
-        score_rect.center = score_container.center
-        self._screen.blit(score_text, score_rect)
+        self._centerText(
+            text = f"{score*100}",
+            font_size = 30,
+            text_color = SCORE_COLOR, 
+            background_color = BACKGROUND_COLOR,
+            position = (WIDTH*(CELL_SIZE-1), 50), 
+            size = (200, 50)
+        )
+
 
 
 
