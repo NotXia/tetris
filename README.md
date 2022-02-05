@@ -13,5 +13,9 @@ In particular to modify the game settings it is possible to change:
  - ```FALL_DELAY_DECREASE_RATE``` to set how much the speed will change
 
 
+It is possible to modify or add new block shapes and colors by changing:
+ - ```BLOCKS``` the list of possible shapes
+ - ```COLORS``` the list of possible colors in RGB format
+
 # Usage
 Run ```python src/main.py``` to start the game.
