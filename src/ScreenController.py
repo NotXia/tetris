@@ -11,7 +11,7 @@ class ScreenController:
         # The x coordinate where the grid ends and anything else can be rendered without overlapping
         self._GRID_END_X = WIDTH*(CELL_SIZE-1) + 1
 
-    def _drawSquare(self, x, y, color):
+    def _drawSquare(self, x, y, color, texture=False):
         """
             Draws a square at a specific position. Does not render on screen.
 
@@ -22,11 +22,23 @@ class ScreenController:
 
             color : Tuple (int, int, int)
                 RGB color of the cell
+            
+            texture : bool
+                If True the square will be drawn with a more complex texture
         """
-        self.pygame.draw.rect(self._screen, color, (x, y, CELL_SIZE, CELL_SIZE))
+        if texture:
+            color_offset = 15
+            darker_color  = [x-color_offset if x > color_offset     else x for x in color]
+            lighter_color = [x+color_offset if x < 255-color_offset else x for x in color]
+            self.pygame.draw.rect(self._screen, lighter_color, (x, y, CELL_SIZE, CELL_SIZE))        # Top and left color
+            self.pygame.draw.rect(self._screen, darker_color, (x+5, y+5, CELL_SIZE-5, CELL_SIZE-5)) # Bottom and right color
+            self.pygame.draw.rect(self._screen, color, (x+5, y+5, CELL_SIZE-10, CELL_SIZE-10))      # Main color
+        else:
+            self.pygame.draw.rect(self._screen, color, (x, y, CELL_SIZE, CELL_SIZE))
+
         self.pygame.draw.rect(self._screen, BORDER_COLOR, (x, y, CELL_SIZE, CELL_SIZE), width=1, border_radius=1)
 
-    def _drawCell(self, x, y, color):
+    def _drawCell(self, x, y, color, solid=False):
         """
             Draws the cell of a specific position of the game grid. Does not render on screen.
 
@@ -37,9 +49,12 @@ class ScreenController:
 
             color : Tuple (int, int, int)
                 RGB color of the cell
+
+            solid : bool
+                Specify if the block is solid
         """
         cell_distance = CELL_SIZE - 1
-        self._drawSquare(x*cell_distance, y*cell_distance, color)
+        self._drawSquare(x*cell_distance, y*cell_distance, color, solid)
 
     def initUI(self):
         """
@@ -71,7 +86,7 @@ class ScreenController:
         for y in range(HEIGHT):
             for x in range(WIDTH):
                 if grid[y][x] is not None:
-                    self._drawCell(x, y, grid[y][x].color)
+                    self._drawCell(x, y, grid[y][x].color, solid=True)
                 else:
                     self._drawCell(x, y, EMPTY_COLOR)
                 
@@ -119,11 +134,11 @@ class ScreenController:
             font_size = 30,
             text_color = SCORE_COLOR, 
             background_color = BACKGROUND_COLOR,
-            position = (self._GRID_END_X, 50), 
+            position = (self._GRID_END_X, 10), 
             size = (200, 50)
         )
 
-    def _drawNextBlockCell(self, x, y, color):
+    def _drawNextBlockCell(self, x, y, color, solid=False):
         """
             Draws the cell of a specific position of the next block grid. Does not render on screen.
 
@@ -134,12 +149,15 @@ class ScreenController:
 
             color : Tuple (int, int, int)
                 RGB color of the cell
+            
+            solid : bool
+                Specify if the block is solid
         """
         start_x = self._GRID_END_X + 75
-        start_y = 200
+        start_y = 120
         shift = (CELL_SIZE - 1)
 
-        self._drawSquare(start_x + (x-1)*shift, start_y + y*shift, color)
+        self._drawSquare(start_x + (x-1)*shift, start_y + y*shift, color, solid)
 
 
     def _initNextBlock(self):
@@ -151,7 +169,7 @@ class ScreenController:
             font_size = 22,
             text_color = (0, 0, 0),
             background_color = BACKGROUND_COLOR,
-            position = (self._GRID_END_X, 150),
+            position = (self._GRID_END_X, 80),
             size = (200, 50)
         )
 
@@ -177,7 +195,7 @@ class ScreenController:
         for y in range(block.height):
             for x in range(block.width):
                 if block.shape[y][x]:
-                    self._drawNextBlockCell(x, y, block.color)
+                    self._drawNextBlockCell(x, y, block.color, solid=True)
 
         self.pygame.display.update()
 
