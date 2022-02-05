@@ -187,27 +187,39 @@ class Tetris:
 
     def _resetRow(self, row):
         """
-            Resets a specific row by setting everything to None.
+            Resets a specific row removing every block
 
             Parameters
             ----------
             row : int
                 The row to reset
         """
-        x = 0
+        # Clears the row
         prev = None
-        while x < self.width:
+        for x in range(self.width):
             if self.grid[row][x] != prev:
-                self.grid[row][x].deleteShapeRow(row - self.grid[row][x].y) # Deletes the corrisponding row in the block shape
+                self.grid[row][x].clearRow(row - self.grid[row][x].y)
                 prev = self.grid[row][x]
             self.grid[row][x] = None
-            x = x + 1
+
+        # Handles split blocks
+        for x in range(self.width):
+            for j in [row-1, row+1]:
+                if (0 <= j < self.height) and (self.grid[j][x] is not None):
+                    curr_block = self.grid[j][x]
+                    split_blocks = curr_block.dismantle()
+                    
+                    # Removes the original block and places the new blocks
+                    self._removeBlock(curr_block)
+                    for block in split_blocks:
+                        self._insertBlock(block)
+
 
     def _handleGravity(self):
         """
             Handles the gravity of the entire board.
         """
-        for y in range(self.height - 2, -1, -1):
+        for y in range(self.height-2, -1, -1):
             for x in range(self.width):
                 if self.grid[y][x] is not None and self._canFall(self.grid[y][x]):
                     self._moveY(self.grid[y][x], self.height)

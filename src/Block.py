@@ -1,10 +1,11 @@
 import random
+import copy
 
 BLOCKS = [
     [
-        [True, True, True], 
-        [True, None, None], 
-    ],
+        [True, True, True],
+        [True, None, None],
+    ],    
     [
         [True, True, True], 
         [None, None, True], 
@@ -44,11 +45,10 @@ class Block:
         """
         self.x, self.y = x, y
         self.color = random.choice(COLORS)
-        self.shape = random.choice(BLOCKS).copy()
+        self.shape = copy.deepcopy(random.choice(BLOCKS))
 
         self.width = len(self.shape[0])
         self.height = len(self.shape)
-
 
     def getBottomCoords(self):
         """
@@ -83,9 +83,9 @@ class Block:
 
         return coords
 
-    def deleteShapeRow(self, row):
+    def clearRow(self, row):
         """
-            Deletes a row of the shape and updates the size.
+            Clears a specific row of the shape
 
             Parameters
             ----------
@@ -93,13 +93,22 @@ class Block:
                 The row to delete
         """
         if 0 <= row < self.height:
-            del self.shape[row]
-            self.height = len(self.shape)
+            for i in range(self.width):
+                self.shape[row][i] = None
 
-            if self.height > 0:
-                self.width = len(self.shape[0])
-            else:
-                self.width = 0
+    def _changeShape(self, shape):
+        """
+            Updates the shape of the block
+
+            Parameters
+            ----------
+                shape : matrix
+                    The new shape
+        """
+        self.shape = shape
+
+        self.width = len(self.shape[0])
+        self.height = len(self.shape)
 
     def rotate(self, clockwise=True):
         """
@@ -112,12 +121,59 @@ class Block:
                 If False, it performs a -90° rotation
         """
         if clockwise:
-            self.shape = list(zip(*reversed(self.shape)))  # 90°
+            new_shape = list(zip(*reversed(self.shape)))        # 90° rotation
         else:
-            self.shape = list(reversed(list(zip(*self.shape))))  # -90°
+            new_shape = list(reversed(list(zip(*self.shape))))  # -90° rotation
+        new_shape = [list(t) for t in new_shape]  # Convert to list
 
-        # Convert to list
-        self.shape = [list(t) for t in self.shape]
+        self._changeShape(new_shape)
 
-        self.width = len(self.shape[0])
-        self.height = len(self.shape)
+    def _isEmptyRow(self, row):
+        """
+            Checks if the row is empty
+
+            Parameters
+            ----------
+            row : int
+                The row to check
+
+            Returns
+            -------
+            bool
+                False : the row contains a solid block
+                True  : otherwise
+        """
+        for x in range(self.width):
+            if self.shape[row][x]:
+                return False
+        return True
+
+    def dismantle(self):
+        """
+            Splits the current block into new blocks based on empty lines
+
+            Returns
+            -------
+            new_blocks : list of Block
+                The new blocks obtained after the split
+        """
+        new_blocks = []
+
+        start = 0
+        for i in range(self.height):
+            if self._isEmptyRow(i):
+                # Creates a new block if it is at least 1 block high
+                if (len(self.shape[start:i]) > 0):
+                    new_block = copy.deepcopy(self)
+                    new_block.y = self.y + start
+                    new_block._changeShape(new_block.shape[start:i])
+                    new_blocks.append(new_block)
+                start = i+1
+        # Creates a block with the remaining part (if needed)
+        if (len(self.shape[start:]) > 0):
+            new_block = copy.deepcopy(self)
+            new_block.y = self.y + start
+            new_block._changeShape(new_block.shape[start:])
+            new_blocks.append(new_block)
+
+        return new_blocks
