@@ -4,9 +4,9 @@ class ScreenController:
     def __init__(self, pygame):
         self.pygame = pygame
 
-        screen_width = WIDTH*(CELL_SIZE-1) + 200
-        screen_height = HEIGHT*(CELL_SIZE-1)
-        self._screen = pygame.display.set_mode([screen_width, screen_height])
+        self._screen_width = WIDTH*(CELL_SIZE-1) + 200
+        self._screen_height = HEIGHT*(CELL_SIZE-1)
+        self._screen = pygame.display.set_mode([self._screen_width, self._screen_height])
 
         # The x coordinate where the grid ends and anything else can be rendered without overlapping
         self._GRID_END_X = WIDTH*(CELL_SIZE-1) + 1
@@ -179,4 +179,11 @@ class ScreenController:
                 if block.shape[y][x]:
                     self._drawNextBlockCell(x, y, block.color)
 
+        self.pygame.display.update()
+
+    def gameOver(self):
+        """
+            Renders the game over screen
+        """
+        self._centerText(f"GAME OVER", 32, (255, 0, 0), BACKGROUND_COLOR, (0, 0), (self._screen_width, self._screen_height))
         self.pygame.display.update()

@@ -4,6 +4,7 @@ from Tetris import Tetris
 from ScreenController import ScreenController
 
 pygame.init()
+pygame.display.set_caption("Tetris")
 tetris = Tetris(WIDTH, HEIGHT) # Game controller
 screenController = ScreenController(pygame)
 
@@ -39,8 +40,13 @@ while running:
 
     if pygame.time.get_ticks() - fall_prev_tick >= fall_delay:  # Handles game's speed
         if not tetris.nextStep():
-            print("Game over")
-            running = False
+            # Game over
+            screenController.gameOver()
+            # Waits an input to close the game
+            while running:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT or event.type == pygame.KEYDOWN:
+                        running = False
         fall_prev_tick = pygame.time.get_ticks()
 
     for event in events:
