@@ -19,3 +19,10 @@ It is possible to modify or add new block shapes and colors by changing:
 
 ## Usage
 Run ```python3 src/main.py``` to start the game.
+
+### Controls
+- ```A``` left move
+- ```D``` right move
+- ```S``` move to bottom
+- ```Q``` counterclockwise rotation
+- ```E``` clockwise rotation
