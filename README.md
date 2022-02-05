@@ -1,10 +1,10 @@
 # Tetris
 Tetris implementation in Python using Pygame.
 
-# Installation
+## Installation
 Run ```pip3 install -r requirements.txt``` to install the required libraries.
 
-# Configuration
+## Configuration
 There are some configuration options in the [settings.py](src/settings.py) file.\
 In particular to modify the game settings it is possible to change:
  - ```WIDTH``` and ```HEIGHT``` to set the grid size.
@@ -17,5 +17,5 @@ It is possible to modify or add new block shapes and colors by changing:
  - ```BLOCKS``` the list of possible shapes
  - ```COLORS``` the list of possible colors in RGB format
 
-# Usage
-Run ```python src/main.py``` to start the game.
+## Usage
+Run ```python3 src/main.py``` to start the game.
