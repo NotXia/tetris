@@ -1,37 +1,6 @@
+from settings import BLOCKS, COLORS
 import random
 import copy
-
-BLOCKS = [
-    [
-        [True, True, True],
-        [True, None, None],
-    ],    
-    [
-        [True, True, True], 
-        [None, None, True], 
-    ],
-    [
-        [True, True], 
-        [True, True], 
-    ],
-    [
-        [True, True, True, True], 
-    ],
-    [
-        [True, True, True],
-        [None, True, None],
-    ],
-    [
-        [None, True, True],
-        [True, True, None],
-    ],
-    [
-        [True, True, None],
-        [None, True, True],
-    ],
-]
-
-COLORS = [(200, 0, 0), (0, 200, 0), (0, 0, 200), (200, 200, 0), (0, 200, 200), (200, 0, 200), (192, 192, 192), (128, 128, 128)]
 
 class Block:
     def __init__(self, x, y):
